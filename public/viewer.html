@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>查看 SVG · SVG Maker</title>
+      <link rel="stylesheet" href="./app.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">SVG Maker</a>
+    </header>
+    <main class="page-shell">
+      <section class="viewer-heading">
+        <div>
+          <p class="eyebrow">SVG VIEWER</p>
+          <h1 id="file-title">查看 SVG</h1>
+          <p id="file-path" class="file-path"></p>
+        </div>
+        <div class="action-row viewer-details">
+          <button id="copy-svg-url" class="button button-secondary" type="button">复制 SVG 地址</button>
+          <button id="copy-embed-url" class="button" type="button">复制 Notion 嵌入地址</button>
+        </div>
+      </section>
+      <div id="status" class="status" role="status">正在读取 SVG…</div>
+      <section class="preview-panel" aria-label="SVG 图像预览">
+        <img id="svg-image" alt="" hidden />
+      </section>
+      <section class="source-panel viewer-details" aria-labelledby="source-title">
+        <div class="section-heading"><h2 id="source-title">源代码</h2></div>
+        <pre class="source-code"><code id="svg-source"></code></pre>
+      </section>
+    </main>
+    <script type="module" src="./viewer.js"></script>
+  </body>
+</html>
