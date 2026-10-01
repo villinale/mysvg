@@ -3,6 +3,7 @@ import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { collectSvgFiles } from '../src/shared/generate-svg-manifest.mjs';
+import { prepareArchify } from './prepare-archify.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const publicDirectory = path.join(root, 'public');
@@ -47,6 +48,7 @@ export async function buildPages() {
   );
 
   const sources = await findSources(sourceDirectory);
+  const archifyCli = sources.length ? await prepareArchify() : null;
   const archifyFiles = [];
   for (const relative of sources) {
     const match = sourceName.exec(path.posix.basename(relative));
@@ -64,11 +66,11 @@ export async function buildPages() {
     await mkdir(path.dirname(output), { recursive: true });
     const result = spawnSync(
       process.execPath,
-      [path.join(root, 'archify', 'archify', 'bin', 'archify.mjs'), 'render', type, input, output],
+      [archifyCli, 'deliver', type, input, output, '--quality', 'showcase', '--json'],
       { cwd: root, encoding: 'utf8' }
     );
     if (result.error || result.status !== 0) {
-      throw new Error('Archify render failed for ' + relative + ':\n' + (result.stderr || result.error?.message || result.stdout));
+      throw new Error('Archify delivery failed for ' + relative + ':\n' + (result.stderr || result.error?.message || result.stdout));
     }
   }
   await writeFile(
